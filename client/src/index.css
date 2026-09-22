@@ -1,0 +1,6 @@
+/* Pulls in Tailwind's base/components/utilities layers (v4 single-import setup). */
+@import "tailwindcss";
+
+body {
+  margin: 0;
+}
