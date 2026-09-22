@@ -3,6 +3,7 @@
 // the actual logic lives in ./routes and ./data (added in later steps).
 import express from "express";
 import cors from "cors";
+import ticketsRouter from "./routes/tickets.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -17,6 +18,10 @@ app.use(express.json());
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
 });
+
+// Mount the tickets router — handles GET /api/tickets with optional
+// ?status=&category=&priority= filters (see routes/tickets.js).
+app.use("/api/tickets", ticketsRouter);
 
 app.listen(PORT, () => {
   console.log(`Butler Dashboard API listening on http://localhost:${PORT}`);
