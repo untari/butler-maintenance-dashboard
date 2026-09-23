@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "butler-dashboard-layout";
 
+// Must stay in sync with the ids registered in ../widgets/registry.js.
 const DEFAULT_LAYOUT = {
-  order: ["ticket-list", "status-summary", "high-priority"],
+  order: ["ticket-list", "high-priority"],
   visible: {
     "ticket-list": true,
-    "status-summary": true,
     "high-priority": true,
   },
 };
