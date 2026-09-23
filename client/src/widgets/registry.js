@@ -4,8 +4,13 @@
 // dashboard means adding one entry here — the Dashboard container and
 // the layout hook don't need to know anything about individual widgets.
 import HighPriorityWidget from "./HighPriorityWidget";
+import TicketListWidget from "./TicketListWidget";
 
 export const WIDGET_REGISTRY = {
+  "ticket-list": {
+    title: "All Tickets",
+    component: TicketListWidget,
+  },
   "high-priority": {
     title: "Needs Attention",
     component: HighPriorityWidget,
