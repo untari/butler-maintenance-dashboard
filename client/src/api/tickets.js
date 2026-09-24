@@ -23,3 +23,18 @@ export async function fetchTickets(filters = {}) {
   }
   return response.json();
 }
+
+// updates: { status?, priority? } — matches what the backend's PATCH
+// route accepts. Returns the updated ticket as persisted server-side,
+// so the caller can trust the response over its own optimistic guess.
+export async function updateTicket(id, updates) {
+  const response = await fetch(`${API_BASE_URL}/api/tickets/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updates),
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to update ticket ${id} (${response.status})`);
+  }
+  return response.json();
+}
