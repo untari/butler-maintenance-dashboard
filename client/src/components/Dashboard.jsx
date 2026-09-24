@@ -14,7 +14,7 @@ import { useDashboardLayout } from "../hooks/useDashboardLayout";
 import { WIDGET_REGISTRY } from "../widgets/registry";
 import WidgetCard from "./WidgetCard";
 
-export default function Dashboard({ tickets }) {
+export default function Dashboard({ tickets, onUpdateTicket }) {
   const { layout, reorder, toggleVisibility } = useDashboardLayout();
 
   // Require the pointer to move a few pixels before a drag starts, so a
@@ -70,7 +70,7 @@ export default function Dashboard({ tickets }) {
                   onHide={() => toggleVisibility(id)}
                   span={widget.span}
                 >
-                  <WidgetComponent tickets={tickets} />
+                  <WidgetComponent tickets={tickets} onUpdateTicket={onUpdateTicket} />
                 </WidgetCard>
               );
             })}
