@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchTickets } from "./api/tickets";
+import { fetchTickets, updateTicket } from "./api/tickets";
 import Dashboard from "./components/Dashboard";
 
 function App() {
@@ -19,6 +19,26 @@ function App() {
       })
       .catch(() => setStatus("error"));
   }, []);
+
+  // Applies a status/priority change immediately in the UI, then persists
+  // it. If the API call fails, the local change is rolled back — the UI
+  // should never show an edit the server didn't actually accept.
+  function handleUpdateTicket(id, updates) {
+    let previous;
+    setTickets((prev) =>
+      prev.map((ticket) => {
+        if (ticket.id !== id) return ticket;
+        previous = ticket;
+        return { ...ticket, ...updates };
+      })
+    );
+
+    updateTicket(id, updates).catch(() => {
+      setTickets((prev) =>
+        prev.map((ticket) => (ticket.id === id ? previous : ticket))
+      );
+    });
+  }
 
   return (
     <main className="min-h-screen bg-[#f5f5f7] px-6 py-10">
@@ -41,7 +61,9 @@ function App() {
             </p>
           </div>
         )}
-        {status === "ready" && <Dashboard tickets={tickets} />}
+        {status === "ready" && (
+          <Dashboard tickets={tickets} onUpdateTicket={handleUpdateTicket} />
+        )}
       </div>
     </main>
   );
