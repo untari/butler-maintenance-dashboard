@@ -5,8 +5,13 @@
 // the layout hook don't need to know anything about individual widgets.
 import HighPriorityWidget from "./HighPriorityWidget";
 import TicketListWidget from "./TicketListWidget";
+import StatusSummaryWidget from "./StatusSummaryWidget";
 
 export const WIDGET_REGISTRY = {
+  "status-summary": {
+    title: "Status Summary",
+    component: StatusSummaryWidget,
+  },
   "ticket-list": {
     title: "All Tickets",
     component: TicketListWidget,
