@@ -1,12 +1,11 @@
 // Wraps the existing filter controls + table as one widget. Owns its
-// filter state locally — this widget's filters shouldn't affect what
-// other widgets (like HighPriorityWidget) show — and filters the shared,
-// already-fetched ticket list client-side rather than re-hitting the API.
+// filter state locally, and filters the shared, already-fetched ticket
+// list client-side rather than re-hitting the API.
 import { useState } from "react";
 import TicketFilters from "../components/TicketFilters";
 import TicketList from "../components/TicketList";
 
-export default function TicketListWidget({ tickets }) {
+export default function TicketListWidget({ tickets, onUpdateTicket }) {
   const [filters, setFilters] = useState({
     status: "",
     category: "",
@@ -23,7 +22,7 @@ export default function TicketListWidget({ tickets }) {
   return (
     <div>
       <TicketFilters filters={filters} onChange={setFilters} />
-      <TicketList tickets={filtered} />
+      <TicketList tickets={filtered} onUpdateTicket={onUpdateTicket} />
     </div>
   );
 }
