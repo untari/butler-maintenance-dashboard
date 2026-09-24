@@ -1,18 +1,6 @@
 // Controlled filter bar: the parent (App) owns the actual filter state,
 // this component just renders controls and reports changes upward.
-// Hardcoded option lists match the fixed enum values used across the
-// dataset and the backend's filtering logic
-const STATUSES = ["Open", "In Progress", "Closed"];
-const CATEGORIES = [
-  "HVAC",
-  "Electrical",
-  "Plumbing",
-  "Security",
-  "Lift",
-  "Civil",
-  "Safety",
-];
-const PRIORITIES = ["Low", "Medium", "High"];
+import { STATUSES, CATEGORIES, PRIORITIES } from "../constants/tickets";
 
 function FilterSelect({ label, value, options, onChange }) {
   return (
