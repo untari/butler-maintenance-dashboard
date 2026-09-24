@@ -16,12 +16,12 @@ const PRIORITIES = ["Low", "Medium", "High"];
 
 function FilterSelect({ label, value, options, onChange }) {
   return (
-    <label className="flex flex-col gap-1 text-sm text-slate-600">
+    <label className="flex flex-col gap-1 text-sm text-neutral-500">
       {label}
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="border border-slate-300 rounded-md px-2 py-1.5 text-slate-800 bg-white"
+        className="border border-black/10 rounded-lg px-2.5 py-1.5 text-neutral-800 bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071e3]/30 focus:border-[#0071e3]"
       >
         <option value="">All</option>
         {options.map((option) => (
@@ -61,7 +61,7 @@ export default function TicketFilters({ filters, onChange }) {
         <button
           type="button"
           onClick={() => onChange({ status: "", category: "", priority: "" })}
-          className="text-sm text-blue-600 hover:underline pb-1.5"
+          className="text-sm text-[#0071e3] hover:underline pb-1.5"
         >
           Clear filters
         </button>
