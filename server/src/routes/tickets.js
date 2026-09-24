@@ -26,4 +26,36 @@ router.get("/", (req, res) => {
   res.json(filtered);
 });
 
+const ALLOWED_STATUSES = ["Open", "In Progress", "Closed"];
+const ALLOWED_PRIORITIES = ["Low", "Medium", "High"];
+
+// PATCH /api/tickets/:id — updates status and/or priority on one ticket
+// and persists the change back to the JSON file. Deliberately limited to
+// these two fields: they're workflow state that legitimately changes
+// over a ticket's life. Category/title/created stay read-only — a
+// ticket's classification isn't something that changes after the fact.
+router.patch("/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const { status, priority } = req.body;
+
+  if (status !== undefined && !ALLOWED_STATUSES.includes(status)) {
+    return res.status(400).json({ error: `Invalid status: ${status}` });
+  }
+  if (priority !== undefined && !ALLOWED_PRIORITIES.includes(priority)) {
+    return res.status(400).json({ error: `Invalid priority: ${priority}` });
+  }
+
+  const tickets = JSON.parse(fs.readFileSync(DATA_PATH, "utf-8"));
+  const ticket = tickets.find((t) => t.id === id);
+  if (!ticket) {
+    return res.status(404).json({ error: `Ticket ${id} not found` });
+  }
+
+  if (status !== undefined) ticket.status = status;
+  if (priority !== undefined) ticket.priority = priority;
+
+  fs.writeFileSync(DATA_PATH, JSON.stringify(tickets, null, 2) + "\n");
+  res.json(ticket);
+});
+
 export default router;
