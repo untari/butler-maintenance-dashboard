@@ -15,6 +15,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useColumnOrder } from "../hooks/useColumnOrder";
+import { STATUSES, PRIORITIES } from "../constants/tickets";
 
 // Color-coding status/priority lets someone scanning the dashboard spot
 // what needs attention without reading every row, the "at a glance" goal.
@@ -30,23 +31,58 @@ const PRIORITY_STYLES = {
   High: "bg-red-100 text-red-700",
 };
 
-function Badge({ label, styles }) {
+// Same pill look the badges used to have, but an actual <select> underneath — status
+// and priority are workflow state that legitimately changes over a
+// ticket's life, unlike category/title/created which stay read-only.
+// `appearance-none` strips the native select chrome so it still reads
+// as a badge; the small chevron is the only hint it's interactive.
+function EditableBadge({ value, options, styles, onChange }) {
   return (
-    <span
-      className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${styles}`}
-    >
-      {label}
+    <span className="relative inline-block">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`appearance-none rounded-full pl-2 pr-5 py-0.5 text-xs font-medium border-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40 ${styles}`}
+      >
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+      <svg
+        className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 opacity-50"
+        width="8"
+        height="8"
+        viewBox="0 0 8 8"
+        fill="none"
+      >
+        <path
+          d="M1 2.5 L4 5.5 L7 2.5"
+          stroke="currentColor"
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
     </span>
   );
 }
 
 // One entry per reorderable column: how to label it and how to render
 // a ticket's value for it. Keyed the same way useColumnOrder's ids are.
+// render receives (ticket, onUpdateTicket) — only the editable columns
+// (status/priority) use the second argument.
 const COLUMNS = {
   status: {
     label: "Status",
-    render: (ticket) => (
-      <Badge label={ticket.status} styles={STATUS_STYLES[ticket.status]} />
+    render: (ticket, onUpdateTicket) => (
+      <EditableBadge
+        value={ticket.status}
+        options={STATUSES}
+        styles={STATUS_STYLES[ticket.status]}
+        onChange={(value) => onUpdateTicket(ticket.id, { status: value })}
+      />
     ),
   },
   category: {
@@ -57,8 +93,13 @@ const COLUMNS = {
   },
   priority: {
     label: "Priority",
-    render: (ticket) => (
-      <Badge label={ticket.priority} styles={PRIORITY_STYLES[ticket.priority]} />
+    render: (ticket, onUpdateTicket) => (
+      <EditableBadge
+        value={ticket.priority}
+        options={PRIORITIES}
+        styles={PRIORITY_STYLES[ticket.priority]}
+        onChange={(value) => onUpdateTicket(ticket.id, { priority: value })}
+      />
     ),
   },
   created: {
@@ -106,7 +147,7 @@ function SortableHeader({ id, label }) {
   );
 }
 
-export default function TicketList({ tickets }) {
+export default function TicketList({ tickets, onUpdateTicket = () => {} }) {
   const { order, reorder } = useColumnOrder();
 
   // Same activation distance as the dashboard widgets — a click on the
@@ -159,7 +200,7 @@ export default function TicketList({ tickets }) {
                 <td className="py-2.5 pr-4 text-neutral-800">{ticket.title}</td>
                 {order.map((key) => (
                   <td key={key} className="py-2.5 pr-4">
-                    {COLUMNS[key].render(ticket)}
+                    {COLUMNS[key].render(ticket, onUpdateTicket)}
                   </td>
                 ))}
               </tr>
