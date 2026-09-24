@@ -5,7 +5,18 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-export default function WidgetCard({ id, title, onHide, children }) {
+// How many of the grid's columns a widget occupies, keyed by the
+// registry's `span` value. Written as full static class strings (not
+// built with template interpolation) so Tailwind's scanner can find them.
+// md only ever has 2 columns, so span 2 and span 3 look identical there —
+// they only diverge at xl, where the grid actually has 3 columns.
+const SPAN_CLASSES = {
+  1: "",
+  2: "md:col-span-2 xl:col-span-2",
+  3: "md:col-span-2 xl:col-span-3",
+};
+
+export default function WidgetCard({ id, title, onHide, span = 1, children }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id });
 
@@ -21,7 +32,7 @@ export default function WidgetCard({ id, title, onHide, children }) {
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-white rounded-2xl shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] border border-black/5 overflow-hidden"
+      className={`bg-white rounded-2xl shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] border border-black/5 overflow-hidden ${SPAN_CLASSES[span]}`}
     >
       <div className="flex items-center justify-between px-5 py-3 border-b border-black/5">
         <div className="flex items-center gap-2">

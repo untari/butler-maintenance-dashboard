@@ -22,7 +22,7 @@ function App() {
 
   return (
     <main className="min-h-screen bg-[#f5f5f7] px-6 py-10">
-      <div className="max-w-5xl mx-auto">
+      <div className="w-full">
         <h1 className="text-3xl font-semibold tracking-tight text-neutral-900 mb-8">
           Butler Dashboard
         </h1>

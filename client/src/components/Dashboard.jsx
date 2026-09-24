@@ -4,15 +4,12 @@
 // widgets and WidgetCard don't.
 import {
   DndContext,
-  closestCenter,
+  closestCorners,
   PointerSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { useDashboardLayout } from "../hooks/useDashboardLayout";
 import { WIDGET_REGISTRY } from "../widgets/registry";
 import WidgetCard from "./WidgetCard";
@@ -57,11 +54,11 @@ export default function Dashboard({ tickets }) {
 
       <DndContext
         sensors={sensors}
-        collisionDetection={closestCenter}
+        collisionDetection={closestCorners}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext items={visibleIds} strategy={verticalListSortingStrategy}>
-          <div className="flex flex-col gap-6">
+        <SortableContext items={visibleIds} strategy={rectSortingStrategy}>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-start">
             {visibleIds.map((id) => {
               const widget = WIDGET_REGISTRY[id];
               const WidgetComponent = widget.component;
@@ -71,6 +68,7 @@ export default function Dashboard({ tickets }) {
                   id={id}
                   title={widget.title}
                   onHide={() => toggleVisibility(id)}
+                  span={widget.span}
                 >
                   <WidgetComponent tickets={tickets} />
                 </WidgetCard>

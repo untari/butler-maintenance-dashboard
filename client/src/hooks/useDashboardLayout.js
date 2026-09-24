@@ -8,11 +8,9 @@ const STORAGE_KEY = "butler-dashboard-layout";
 
 // Must stay in sync with the ids registered in ../widgets/registry.js.
 const DEFAULT_LAYOUT = {
-  order: ["status-summary", "ticket-list", "high-priority"],
+  order: ["ticket-list"],
   visible: {
-    "status-summary": true,
     "ticket-list": true,
-    "high-priority": true,
   },
 };
 
